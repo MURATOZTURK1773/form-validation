@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import "./App.css";
 import { TextInput } from "./TextInput";
 
@@ -7,18 +7,26 @@ export function App() {
   const [lastNameInput, setLastNameInput] = useState("");
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  const formRef = useRef<HTMLFormElement>(null);
-
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsFormSubmitted(true);
-    formRef.current?.reset();
+  const reset = () => {
+    setFirstNameInput("");
+    setLastNameInput("");
+    setIsFormSubmitted(false);
   };
 
   return (
     <>
       <div>
-        <form ref={formRef} onSubmit={handleFormSubmit}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (firstNameInput.length <= 2 || lastNameInput.length <= 2) {
+              setIsFormSubmitted(true);
+              return;
+            }
+
+            reset();
+          }}
+        >
           <TextInput
             inputProps={{
               onChange: (e) => {
